@@ -6,9 +6,10 @@ import { Separator } from "@/components/ui/separator";
 import { Billboard } from "@prisma/client";
 import { Plus } from "lucide-react";
 import { useRouter, useParams } from "next/navigation";
+import { BillboardColumn } from "./columns";
 
 interface BillboardClientProps {
-  data: Billboard[];
+  data: BillboardColumn[];
 }
 
 export const BillboardClient: React.FC<BillboardClientProps> = ({ data }) => {
