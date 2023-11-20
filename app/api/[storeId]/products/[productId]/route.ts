@@ -33,29 +33,38 @@ export async function GET(
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { storeId: string; productId: string } },
+  { params }: { params: { productId: string; storeId: string } },
 ) {
   try {
     const { userId } = auth();
+
     const body = await req.json();
 
     const {
       name,
       price,
       categoryId,
+      images,
       colorId,
       sizeId,
-      images,
       isFeatured,
       isArchived,
     } = body;
 
     if (!userId) {
-      return new NextResponse("Unauthenticated", { status: 401 });
+      return new NextResponse("Unauthenticated", { status: 403 });
+    }
+
+    if (!params.productId) {
+      return new NextResponse("Product id is required", { status: 400 });
     }
 
     if (!name) {
       return new NextResponse("Name is required", { status: 400 });
+    }
+
+    if (!images || !images.length) {
+      return new NextResponse("Images are required", { status: 400 });
     }
 
     if (!price) {
@@ -63,23 +72,15 @@ export async function PATCH(
     }
 
     if (!categoryId) {
-      return new NextResponse("Price is required", { status: 400 });
-    }
-
-    if (!price) {
-      return new NextResponse("CategoryID is required", { status: 400 });
-    }
-
-    if (!sizeId) {
-      return new NextResponse("SizeID is required", { status: 400 });
+      return new NextResponse("Category id is required", { status: 400 });
     }
 
     if (!colorId) {
-      return new NextResponse("ColorID is required", { status: 400 });
+      return new NextResponse("Color id is required", { status: 400 });
     }
 
-    if (!params.productId) {
-      return new NextResponse("ProductID is required", { status: 400 });
+    if (!sizeId) {
+      return new NextResponse("Size id is required", { status: 400 });
     }
 
     const storeByUserId = await prismadb.store.findFirst({
@@ -90,7 +91,7 @@ export async function PATCH(
     });
 
     if (!storeByUserId) {
-      return new NextResponse("Unauthorised", { status: 403 });
+      return new NextResponse("Unauthorized", { status: 405 });
     }
 
     await prismadb.product.update({
