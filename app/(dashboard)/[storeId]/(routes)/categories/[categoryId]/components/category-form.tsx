@@ -1,15 +1,18 @@
 "use client";
 
-import { useForm } from "react-hook-form";
 import * as z from "zod";
+import axios from "axios";
+import toast from "react-hot-toast";
 import { Trash } from "lucide-react";
-import { Billboard, Category, Store } from "@prisma/client";
+import { useForm } from "react-hook-form";
+import { useParams, useRouter } from "next/navigation";
+import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 
+import { Billboard, Category } from "@prisma/client";
+
+import { AlertModal } from "@/components/modals/alert-modal";
 import { Button } from "@/components/ui/button";
-import { Heading } from "@/components/ui/heading";
-import { Separator } from "@/components/ui/separator";
-import { useState } from "react";
 import {
   Form,
   FormControl,
@@ -18,12 +21,9 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Heading } from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
-import toast from "react-hot-toast";
-import axios from "axios";
-import { useParams, useRouter } from "next/navigation";
-import { AlertModal } from "@/components/modals/alert-modal";
-import ImageUpload from "@/components/ui/image-upload";
+import { Separator } from "@/components/ui/separator";
 import {
   Select,
   SelectContent,
@@ -51,8 +51,8 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
   const params = useParams();
   const router = useRouter();
 
-  const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
 
   const title = initialData ? "Edit category" : "Create category";
   const description = initialData ? "Edit a category" : "Create a new category";
@@ -82,8 +82,9 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
 
       router.refresh();
       router.push(`/${params.storeId}/categories`);
+
       toast.success(toastMessage);
-    } catch (error) {
+    } catch (error: any) {
       toast.error("Something went wrong!");
     } finally {
       setLoading(false);
@@ -93,13 +94,16 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
   const onDelete = async () => {
     try {
       setLoading(true);
+
       await axios.delete(
         `/api/${params.storeId}/categories/${params.categoryId}`,
       );
+
       router.refresh();
       router.push(`/${params.storeId}/categories`);
+
       toast.success("Category deleted!");
-    } catch (error) {
+    } catch (error: any) {
       toast.error(
         "Make sure to remove all products using this category first.",
       );
@@ -118,7 +122,12 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
         loading={loading}
       />
 
-      <div className='flex items-center justify-between'>
+      <div
+        className='
+        flex 
+        items-center 
+        justify-between'
+      >
         <Heading title={title} description={description} />
 
         {initialData && (
@@ -140,7 +149,12 @@ export const CategoryForm: React.FC<CategoryFormProps> = ({
           onSubmit={form.handleSubmit(onSubmit)}
           className='space-y-8 w-full'
         >
-          <div className='grid grid-cols-3 gap-8'>
+          <div
+            className='
+            grid 
+            grid-cols-3 
+            gap-8'
+          >
             <FormField
               control={form.control}
               name='name'
