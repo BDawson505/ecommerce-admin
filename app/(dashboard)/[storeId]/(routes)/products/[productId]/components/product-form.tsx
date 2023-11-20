@@ -345,7 +345,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                     <Checkbox
                       checked={field.value}
                       // @ts-ignore
-                      onCheckedChange={field.onChange()}
+                      onCheckedChange={field.onChange}
                     />
                   </FormControl>
                   <div className='space-y-1 leading-none'>
@@ -367,7 +367,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
                     <Checkbox
                       checked={field.value}
                       // @ts-ignore
-                      onCheckedChange={field.onChange()}
+                      onCheckedChange={field.onChange}
                     />
                   </FormControl>
                   <div className='space-y-1 leading-none'>
