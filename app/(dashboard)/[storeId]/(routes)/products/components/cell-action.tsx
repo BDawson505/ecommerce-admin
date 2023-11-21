@@ -1,5 +1,13 @@
 "use client";
 
+import axios from "axios";
+import { Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
+import toast from "react-hot-toast";
+import { useState } from "react";
+import { useRouter, useParams } from "next/navigation";
+
+import { AlertModal } from "@/components/modals/alert-modal";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,21 +16,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ProductColumn } from "./columns";
-import { Button } from "@/components/ui/button";
-import { Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
-import toast from "react-hot-toast";
-import { useRouter, useParams } from "next/navigation";
-import { AlertModal } from "@/components/modals/alert-modal";
-import { useState } from "react";
-import axios from "axios";
 
 interface CellActionProps {
   data: ProductColumn;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
-  const router = useRouter();
   const params = useParams();
+  const router = useRouter();
 
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
@@ -35,11 +36,14 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const onDelete = async () => {
     try {
       setLoading(true);
+
       await axios.delete(`/api/${params.storeId}/products/${data.id}`);
+
       router.refresh();
       router.push(`/${params.storeId}/products`);
+
       toast.success("Product Deleted!");
-    } catch (error) {
+    } catch (error: any) {
       toast.error("Something went wrong!");
     } finally {
       setLoading(false);

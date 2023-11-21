@@ -1,22 +1,22 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Heading } from "@/components/ui/heading";
-import { Separator } from "@/components/ui/separator";
-import { Billboard } from "@prisma/client";
 import { Plus } from "lucide-react";
 import { useRouter, useParams } from "next/navigation";
+
+import { ApiList } from "@/components/ui/api-list";
+import { Button } from "@/components/ui/button";
 import { ColorColumn, columns } from "./columns";
 import { DataTable } from "@/components/ui/data-table";
-import { ApiList } from "@/components/ui/api-list";
+import { Heading } from "@/components/ui/heading";
+import { Separator } from "@/components/ui/separator";
 
 interface ColorsClientProps {
   data: ColorColumn[];
 }
 
 export const ColorsClient: React.FC<ColorsClientProps> = ({ data }) => {
-  const router = useRouter();
   const params = useParams();
+  const router = useRouter();
 
   return (
     <>

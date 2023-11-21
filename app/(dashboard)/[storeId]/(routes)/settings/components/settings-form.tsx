@@ -1,15 +1,17 @@
 "use client";
 
-import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { Trash } from "lucide-react";
+import axios from "axios";
+import toast from "react-hot-toast";
 import { Store } from "@prisma/client";
+import { Trash } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { useParams, useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 
+import { AlertModal } from "@/components/modals/alert-modal";
+import { ApiAlert } from "@/components/ui/api-alert";
 import { Button } from "@/components/ui/button";
-import { Heading } from "@/components/ui/heading";
-import { Separator } from "@/components/ui/separator";
-import { useState } from "react";
 import {
   Form,
   FormControl,
@@ -18,12 +20,10 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Heading } from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
-import toast from "react-hot-toast";
-import axios from "axios";
-import { useParams, useRouter } from "next/navigation";
-import { AlertModal } from "@/components/modals/alert-modal";
-import { ApiAlert } from "@/components/ui/api-alert";
+import { Separator } from "@/components/ui/separator";
+import { useState } from "react";
 import { useOrigin } from "@/hooks/use-origin";
 
 interface SettingsFormProps {
@@ -54,9 +54,11 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({ initialData }) => {
       setLoading(true);
 
       await axios.patch(`/api/stores/${params.storeId}`, data);
+
       router.refresh();
+
       toast.success("Store updated!");
-    } catch (error) {
+    } catch (error: any) {
       toast.error("Something went wrong!");
     } finally {
       setLoading(false);
@@ -66,11 +68,14 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({ initialData }) => {
   const onDelete = async () => {
     try {
       setLoading(true);
+
       await axios.delete(`/api/stores/${params.storeId}`);
+
       router.refresh();
       router.push("/");
+
       toast.success("Store deleted!");
-    } catch (error) {
+    } catch (error: any) {
       toast.error("Make sure to reomve all products and categories first.");
     } finally {
       setLoading(false);

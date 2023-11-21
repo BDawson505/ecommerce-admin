@@ -1,15 +1,17 @@
 "use client";
 
-import { useForm } from "react-hook-form";
 import * as z from "zod";
+import axios from "axios";
+import { Size } from "@prisma/client";
+import toast from "react-hot-toast";
 import { Trash } from "lucide-react";
-import { Billboard, Size, Store } from "@prisma/client";
+import { useForm } from "react-hook-form";
+import { useState } from "react";
+import { useParams, useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 
+import { AlertModal } from "@/components/modals/alert-modal";
 import { Button } from "@/components/ui/button";
-import { Heading } from "@/components/ui/heading";
-import { Separator } from "@/components/ui/separator";
-import { useState } from "react";
 import {
   Form,
   FormControl,
@@ -18,12 +20,9 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Heading } from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
-import toast from "react-hot-toast";
-import axios from "axios";
-import { useParams, useRouter } from "next/navigation";
-import { AlertModal } from "@/components/modals/alert-modal";
-import ImageUpload from "@/components/ui/image-upload";
+import { Separator } from "@/components/ui/separator";
 
 interface SizeFormProps {
   initialData: Size | null;
@@ -71,8 +70,9 @@ export const SizeForm: React.FC<SizeFormProps> = ({ initialData }) => {
 
       router.refresh();
       router.push(`/${params.storeId}/sizes`);
+
       toast.success(toastMessage);
-    } catch (error) {
+    } catch (error: any) {
       toast.error("Something went wrong!");
     } finally {
       setLoading(false);
@@ -82,11 +82,14 @@ export const SizeForm: React.FC<SizeFormProps> = ({ initialData }) => {
   const onDelete = async () => {
     try {
       setLoading(true);
+
       await axios.delete(`/api/${params.storeId}/sizes/${params.sizeId}`);
+
       router.refresh();
       router.push("/");
+
       toast.success("Size deleted!");
-    } catch (error) {
+    } catch (error: any) {
       toast.error("Make sure to remove all products using this size first.");
     } finally {
       setLoading(false);

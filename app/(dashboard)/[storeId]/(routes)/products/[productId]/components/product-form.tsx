@@ -1,23 +1,19 @@
 "use client";
 
-import { useForm } from "react-hook-form";
 import * as z from "zod";
+import axios from "axios";
+import toast from "react-hot-toast";
 import { Trash } from "lucide-react";
-import {
-  Billboard,
-  Category,
-  Color,
-  Image,
-  Product,
-  Size,
-  Store,
-} from "@prisma/client";
+import { useForm } from "react-hook-form";
+import { useState } from "react";
+import { useParams, useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 
+import { Category, Color, Image, Product, Size } from "@prisma/client";
+
+import { AlertModal } from "@/components/modals/alert-modal";
 import { Button } from "@/components/ui/button";
-import { Heading } from "@/components/ui/heading";
-import { Separator } from "@/components/ui/separator";
-import { useState } from "react";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Form,
   FormControl,
@@ -27,12 +23,10 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import toast from "react-hot-toast";
-import axios from "axios";
-import { useParams, useRouter } from "next/navigation";
-import { AlertModal } from "@/components/modals/alert-modal";
+import { Heading } from "@/components/ui/heading";
 import ImageUpload from "@/components/ui/image-upload";
+import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
 import {
   Select,
   SelectContent,
@@ -40,7 +34,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
 
 interface ProductFormProps {
   initialData:
@@ -118,6 +111,7 @@ export const ProductForm: React.FC<ProductFormProps> = ({
       }
       router.refresh();
       router.push(`/${params.storeId}/products`);
+
       toast.success(toastMessage);
     } catch (error: any) {
       toast.error("Something went wrong!");
@@ -129,11 +123,14 @@ export const ProductForm: React.FC<ProductFormProps> = ({
   const onDelete = async () => {
     try {
       setLoading(true);
+
       await axios.delete(`/api/${params.storeId}/products/${params.productId}`);
+
       router.refresh();
       router.push(`/${params.storeId}/products`);
+
       toast.success("Product deleted!");
-    } catch (error) {
+    } catch (error: any) {
       toast.error("Something went wrong!");
     } finally {
       setLoading(false);

@@ -1,22 +1,21 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Heading } from "@/components/ui/heading";
-import { Separator } from "@/components/ui/separator";
-import { Billboard } from "@prisma/client";
-import { Plus } from "lucide-react";
-import { useRouter, useParams } from "next/navigation";
-import { ProductColumn, columns } from "./columns";
-import { DataTable } from "@/components/ui/data-table";
 import { ApiList } from "@/components/ui/api-list";
+import { Button } from "@/components/ui/button";
+import { DataTable } from "@/components/ui/data-table";
+import { Heading } from "@/components/ui/heading";
+import { Plus } from "lucide-react";
+import { ProductColumn, columns } from "./columns";
+import { Separator } from "@/components/ui/separator";
+import { useRouter, useParams } from "next/navigation";
 
 interface ProductClientProps {
   data: ProductColumn[];
 }
 
 export const ProductClient: React.FC<ProductClientProps> = ({ data }) => {
-  const router = useRouter();
   const params = useParams();
+  const router = useRouter();
 
   return (
     <>
